@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 rootProject.name = "ApostasEsportivas"
 include ':app'
 include ':common'
+include ':signup-domain'
+include ':signup-ui'
