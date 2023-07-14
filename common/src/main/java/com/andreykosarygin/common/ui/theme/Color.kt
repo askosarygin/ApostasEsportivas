@@ -13,3 +13,6 @@ val Pink40 = Color(0xFF7D5260)
 //ApostasEsportivas colors
 val appBackground = Color(0xFF2C2C2C)
 val buttonColor = Color(0xFFFFC700)
+val buttonColorText = Color(0xFF3B3B3B)
+val appNameBackground = Color(0xFFFFC700)
+val textColorWhite = Color(0xFFFFFFFF)

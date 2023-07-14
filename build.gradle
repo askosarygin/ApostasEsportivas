@@ -8,6 +8,7 @@ buildscript {
         roomVersion = '2.4.0'
         glideVersion = '4.15.0'
         navigationComposeVersion = '2.6.0'
+        phoneNumberKitVersion = '2.0.6'
 
         //kotlin
         coreKtxVersion = '1.8.0'
