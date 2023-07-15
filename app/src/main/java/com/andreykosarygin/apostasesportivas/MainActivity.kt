@@ -6,6 +6,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.andreykosarygin.common.Routes
+import com.andreykosarygin.common.SavedStateKeys
+import com.andreykosarygin.common.ScreenSignUpState
 import com.andreykosarygin.common.ui.theme.ApostasEsportivasTheme
 import com.andreykosarygin.data.RepositorySignUpDomainImpl
 import com.andreykosarygin.data.countriescodes.CountriesCodesStorageImpl
@@ -37,9 +43,25 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ApostasEsportivasTheme {
-                ScreenSignUp(ScreenSignUpViewModel(
-                    getApplicationInstance().interactorSignUpDomain
-                ))
+                val navController = rememberNavController()
+
+                NavHost(navController = navController, startDestination = Routes.SCREEN_SIGN_UP) {
+                    composable(route = Routes.SCREEN_SIGN_UP) {
+                        val screenState =
+                            navController.previousBackStackEntry?.savedStateHandle?.get<ScreenSignUpState>(
+                                SavedStateKeys.KEY_STATE_SCREEN_SIGN_UP
+                            )
+
+                        ScreenSignUp(
+                            screenState = screenState,
+                            navController = navController,
+                            viewModel = ScreenSignUpViewModel(
+                                getApplicationInstance().interactorSignUpDomain
+                            )
+                        )
+                    }
+                }
+
             }
         }
     }

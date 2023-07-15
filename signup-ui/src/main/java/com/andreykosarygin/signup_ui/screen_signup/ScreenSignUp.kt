@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,8 +47,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.NavController
 import com.andreykosarygin.common.CountryCodeInfo
 import com.andreykosarygin.common.R
+import com.andreykosarygin.common.Routes
+import com.andreykosarygin.common.SavedStateKeys
+import com.andreykosarygin.common.ScreenSignUpState
 import com.andreykosarygin.common.ui.theme.appNameBackground
 import com.andreykosarygin.common.ui.theme.buttonColorText
 import com.andreykosarygin.common.ui.theme.colorWhite
@@ -64,9 +69,33 @@ fun GreetingPreview() {
 
 @Composable
 fun ScreenSignUp(
+    screenState: ScreenSignUpState?,
+    navController: NavController,
     viewModel: ScreenSignUpViewModel
 ) {
+    viewModel.loadScreenState(screenState = screenState)
+
     val model by viewModel.model.collectAsState()
+
+    model.navigationEvent?.use { route ->
+        when (route) {
+            ScreenSignUpViewModel.Model.NavigationSingleLifeEvent.NavigationDestination.ScreenTerms -> {
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    SavedStateKeys.KEY_STATE_SCREEN_SIGN_UP, ScreenSignUpState(
+                        model.buttonRegistrationEnabled,
+                        model.phoneNumber,
+                        model.phoneNumberLength,
+                        model.countryFlag,
+                        model.phoneCode,
+                        model.phoneMask
+                    )
+                )
+                navController.navigate(Routes.SCREEN_TERMS)
+            }
+            ScreenSignUpViewModel.Model.NavigationSingleLifeEvent.NavigationDestination.ScreenCompanies ->
+                navController.navigate(Routes.SCREEN_COMPANIES)
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -154,6 +183,7 @@ fun ScreenSignUp(
             )
 
             RegistrationButton(
+                enabled = model.buttonRegistrationEnabled,
                 modifier = Modifier.constrainAs(registrationButton) {
                     top.linkTo(anchor = welcome.bottom, margin = 198.dp)
                     start.linkTo(anchor = parent.start)
@@ -183,11 +213,15 @@ fun ScreenSignUp(
                 style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.constrainAs(termsOfUse) {
-                    top.linkTo(anchor = confirm.bottom, margin = 14.dp)
-                    start.linkTo(anchor = parent.start)
-                    end.linkTo(anchor = parent.end)
-                }
+                modifier = Modifier
+                    .constrainAs(termsOfUse) {
+                        top.linkTo(anchor = confirm.bottom, margin = 14.dp)
+                        start.linkTo(anchor = parent.start)
+                        end.linkTo(anchor = parent.end)
+                    }
+                    .clickable {
+                        viewModel.termsOfUseAndPrivacyPolicyClicked()
+                    }
             )
 
             if (model.showCodesOfCountriesList) {
@@ -213,26 +247,35 @@ fun ScreenSignUp(
 
 @Composable
 fun RegistrationButton(
+    enabled: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Button(
+    Box(
         modifier = modifier,
-        onClick = onClick,
-        shape = RoundedCornerShape(size = 2.93333.dp),
-        contentPadding = PaddingValues(
-            start = 50.dp,
-            top = 7.5.dp,
-            end = 50.dp,
-            bottom = 6.dp
-        )
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = stringResource(id = R.string.registration),
-            style = MaterialTheme.typography.labelLarge.copy(
-                color = buttonColorText
+        Button(
+            enabled = enabled,
+            onClick = onClick,
+            shape = RoundedCornerShape(size = 2.93333.dp),
+            colors = ButtonDefaults.buttonColors(
+                disabledContainerColor = colorWhite
+            ),
+            contentPadding = PaddingValues(
+                start = 50.dp,
+                top = 7.5.dp,
+                end = 50.dp,
+                bottom = 6.dp
             )
-        )
+        ) {
+            Text(
+                text = stringResource(id = R.string.registration),
+                style = MaterialTheme.typography.labelLarge.copy(
+                    color = buttonColorText
+                )
+            )
+        }
     }
 }
 

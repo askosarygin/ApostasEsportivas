@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.andreykosarygin.common.ApostasEsportivasViewModel
 import com.andreykosarygin.common.ApostasEsportivasViewModelSingleLifeEvent
 import com.andreykosarygin.common.CountryCodeInfo
+import com.andreykosarygin.common.ScreenSignUpState
 import com.andreykosarygin.signup_domain.Interactor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,9 +21,36 @@ class ScreenSignUpViewModel(
         }
     }
 
+    fun loadScreenState(screenState: ScreenSignUpState?) {
+        screenState?.let {
+            updateButtonRegistrationEnabled(it.buttonRegistrationEnabled)
+            updatePhoneNumber(it.phoneNumber)
+            updatePhoneNumberLength(it.phoneNumberLength)
+            updateCountryFlag(it.countryFlag)
+            updatePhoneCode(it.phoneCode)
+            updatePhoneMask(it.phoneMask)
+        }
+    }
+
+    fun termsOfUseAndPrivacyPolicyClicked() {
+        updateNavigationEvent(
+            Model.NavigationSingleLifeEvent(
+                Model.NavigationSingleLifeEvent.NavigationDestination.ScreenTerms
+            )
+        )
+    }
+
     fun phoneNumberChanged(newPhoneNumber: String) {
         if (newPhoneNumber.length <= model.value.phoneNumberLength) {
             updatePhoneNumber(newPhoneNumber)
+        }
+
+        if (model.value.phoneNumber.length == model.value.phoneNumberLength) {
+            updateButtonRegistrationEnabled(true)
+        }
+
+        if (model.value.phoneNumber.length < model.value.phoneNumberLength) {
+            updateButtonRegistrationEnabled(false)
         }
     }
 
@@ -32,6 +60,7 @@ class ScreenSignUpViewModel(
 
     fun countryCodeSelected(countryCodeIndex: Int) {
         updatePhoneNumber("")
+        updateButtonRegistrationEnabled(false)
         val country = model.value.countriesCodeList[countryCodeIndex]
         country.flagIcon?.let {
             updateCountryFlag(it)
@@ -43,6 +72,7 @@ class ScreenSignUpViewModel(
     }
 
     data class Model(
+        val buttonRegistrationEnabled: Boolean = false,
         val showCodesOfCountriesList: Boolean = false,
         val phoneNumber: String = "",
         val phoneNumberLength: Int = 0,
@@ -59,12 +89,21 @@ class ScreenSignUpViewModel(
             navigateTo
         ) {
             enum class NavigationDestination {
-
+                ScreenTerms,
+                ScreenCompanies
             }
         }
     }
 
-    private fun updateCountryFlag(countryFlag: Drawable) {
+    private fun updateButtonRegistrationEnabled(buttonRegistrationEnabled: Boolean) {
+        update {
+            it.copy(
+                buttonRegistrationEnabled = buttonRegistrationEnabled
+            )
+        }
+    }
+
+    private fun updateCountryFlag(countryFlag: Drawable?) {
         update {
             it.copy(
                 countryFlag = countryFlag

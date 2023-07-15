@@ -5,9 +5,11 @@
     <string name="welcome">BEM-VINDO!</string>
     <string name="register_to_choose_a_bookmaker">Register to choose\na bookmaker</string>
     <string name="enter_number_of_phone">SEU NÚMERO DE TELEFONE</string>
+    <string name="please_enter_number_of_phone">Please enter number of phone!</string>
     <string name="registration">REGISTRATION</string>
     <string name="confirm">By clicking on the “Register” button, you confirm that you\nare over 18 years old, have read and accept.</string>
     <string name="terms_of_use_and_privacy_policy">TERMS OF USE AND PRIVACY POLICY</string>
+    <string name="terms_of_use_and_privacy_policy_text">TERMS OF USE AND PRIVACY POLICY TEXT</string>
     <string name="notice_about_private_policy">SMS confirmation is free. The entrance to the\napplication is confidential, your data will not be shared.</string>
 
 
