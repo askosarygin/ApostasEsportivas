@@ -34,20 +34,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.andreykosarygin.common.CountryCodeInfo
 import com.andreykosarygin.common.R
-import com.andreykosarygin.common.ui.theme.ApostasEsportivasTheme
 import com.andreykosarygin.common.ui.theme.appNameBackground
 import com.andreykosarygin.common.ui.theme.buttonColorText
 import com.andreykosarygin.common.ui.theme.colorWhite
-import com.andreykosarygin.common.utils.phonenumberutil.PhoneNumberUtil
 import com.andreykosarygin.signup_ui.screen_signup.utils.PhoneNumberVisualTransformation
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    ApostasEsportivasTheme {
-        ScreenSignUp(ScreenSignUpViewModel())
-    }
+//    ApostasEsportivasTheme {
+//        ScreenSignUp(ScreenSignUpViewModel())
+//    }
 }
 
 @Composable
@@ -125,6 +124,7 @@ fun ScreenSignUp(
             PhoneEntryField(
                 phoneCode = model.phoneCode,
                 phoneNumber = model.phoneNumber,
+                phoneNumberLength = model.phoneNumberLength,
                 phoneMask = model.phoneMask,
                 whatCharInMaskIsPhoneNumber = model.whatCharInMaskIsPhoneNumber,
                 onPhoneChange = {
@@ -221,6 +221,7 @@ fun RegistrationButton(
 private fun PhoneEntryField(
     phoneCode: String,
     phoneNumber: String,
+    phoneNumberLength: Int,
     phoneMask: String,
     whatCharInMaskIsPhoneNumber: Char,
     onPhoneChange: (String) -> Unit,
@@ -238,6 +239,7 @@ private fun PhoneEntryField(
                 .fillMaxWidth()
                 .padding(top = 7.dp, bottom = 10.dp),
             visualTransformation = PhoneNumberVisualTransformation(
+                phoneNumberLength = phoneNumberLength,
                 mask = phoneMask,
                 whatCharInMaskIsPhoneNumber = whatCharInMaskIsPhoneNumber
             ),
@@ -268,7 +270,7 @@ private fun PhoneEntryField(
 @Composable
 private fun CountriesCodeList(
     modifier: Modifier = Modifier,
-    listOfCountries: List<PhoneNumberUtil.Country>,
+    listOfCountries: List<CountryCodeInfo>,
     onCodeCountryClick: (selectedCodeCountryIndex: Int) -> Unit
 ) {
     Box(modifier = modifier) {

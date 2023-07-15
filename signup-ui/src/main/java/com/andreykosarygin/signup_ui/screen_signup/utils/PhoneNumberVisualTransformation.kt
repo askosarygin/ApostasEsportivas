@@ -9,12 +9,10 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 
 class PhoneNumberVisualTransformation(
+    private val phoneNumberLength: Int,
     private val mask: String,
     private val whatCharInMaskIsPhoneNumber: Char
 ) : VisualTransformation {
-    private val phoneNumberLength = mask.count {
-        it == whatCharInMaskIsPhoneNumber
-    }
 
     override fun filter(text: AnnotatedString): TransformedText {
         val phoneNumber = if (text.text.length > phoneNumberLength) {
