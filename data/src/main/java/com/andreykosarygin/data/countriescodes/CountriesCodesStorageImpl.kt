@@ -2,7 +2,6 @@ package com.andreykosarygin.data.countriescodes
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.util.Log
 import me.ibrahimsn.lib.PhoneNumberKit
 import me.ibrahimsn.lib.internal.io.FileReader
 import org.json.JSONArray
@@ -33,16 +32,6 @@ class CountriesCodesStorageImpl(
                         append(it)
                     }
                 }
-            }
-
-            //todo
-            if (country.code == 684) {
-                Log.i("MY_TAG", "name=${country.name}")
-                Log.i("MY_TAG", "code=${country.code}")
-                Log.i("MY_TAG", "number=${number}")
-                Log.i("MY_TAG", "formattedPhoneNumber=${formattedPhoneNumber}")
-                Log.i("MY_TAG", "formattedPhoneNumberWithoutCode=${formattedPhoneNumberWithoutCode}")
-                Log.i("MY_TAG", "mask=${mask}")
             }
 
             Country(

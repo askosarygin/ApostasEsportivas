@@ -10,8 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.andreykosarygin.common.Routes
-import com.andreykosarygin.common.SavedStateKeys
-import com.andreykosarygin.common.ScreenSignUpState
 import com.andreykosarygin.common.ui.theme.ApostasEsportivasTheme
 import com.andreykosarygin.data.RepositorySignUpDomainImpl
 import com.andreykosarygin.data.countriescodes.CountriesCodesStorageImpl
@@ -19,6 +17,8 @@ import com.andreykosarygin.signup_domain.InteractorImpl
 import com.andreykosarygin.signup_domain.usecases.LoadCountriesCodesUseCase
 import com.andreykosarygin.signup_ui.screen_signup.ScreenSignUp
 import com.andreykosarygin.signup_ui.screen_signup.ScreenSignUpViewModel
+import com.andreykosarygin.signup_ui.screen_terms.ScreenTerms
+import com.andreykosarygin.signup_ui.screen_terms.ScreenTermsViewModel
 
 class MainApp : Application() {
     private lateinit var countriesCodesStorageImpl: CountriesCodesStorageImpl
@@ -47,17 +47,18 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = Routes.SCREEN_SIGN_UP) {
                     composable(route = Routes.SCREEN_SIGN_UP) {
-                        val screenState =
-                            navController.previousBackStackEntry?.savedStateHandle?.get<ScreenSignUpState>(
-                                SavedStateKeys.KEY_STATE_SCREEN_SIGN_UP
-                            )
-
                         ScreenSignUp(
-                            screenState = screenState,
                             navController = navController,
                             viewModel = ScreenSignUpViewModel(
                                 getApplicationInstance().interactorSignUpDomain
                             )
+                        )
+                    }
+
+                    composable(route = Routes.SCREEN_TERMS) {
+                        ScreenTerms(
+                            navController = navController,
+                            viewModel = ScreenTermsViewModel()
                         )
                     }
                 }

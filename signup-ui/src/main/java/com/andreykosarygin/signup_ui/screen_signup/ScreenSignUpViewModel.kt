@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.andreykosarygin.common.ApostasEsportivasViewModel
 import com.andreykosarygin.common.ApostasEsportivasViewModelSingleLifeEvent
 import com.andreykosarygin.common.CountryCodeInfo
-import com.andreykosarygin.common.ScreenSignUpState
 import com.andreykosarygin.signup_domain.Interactor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,17 +17,6 @@ class ScreenSignUpViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val countriesCodeList = interactor.loadCountriesCodes()
             updateCountriesCodeList(countriesCodeList = countriesCodeList)
-        }
-    }
-
-    fun loadScreenState(screenState: ScreenSignUpState?) {
-        screenState?.let {
-            updateButtonRegistrationEnabled(it.buttonRegistrationEnabled)
-            updatePhoneNumber(it.phoneNumber)
-            updatePhoneNumberLength(it.phoneNumberLength)
-            updateCountryFlag(it.countryFlag)
-            updatePhoneCode(it.phoneCode)
-            updatePhoneMask(it.phoneMask)
         }
     }
 

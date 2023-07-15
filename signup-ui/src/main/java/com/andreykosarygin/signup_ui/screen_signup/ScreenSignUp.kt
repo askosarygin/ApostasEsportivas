@@ -51,8 +51,6 @@ import androidx.navigation.NavController
 import com.andreykosarygin.common.CountryCodeInfo
 import com.andreykosarygin.common.R
 import com.andreykosarygin.common.Routes
-import com.andreykosarygin.common.SavedStateKeys
-import com.andreykosarygin.common.ScreenSignUpState
 import com.andreykosarygin.common.ui.theme.appNameBackground
 import com.andreykosarygin.common.ui.theme.buttonColorText
 import com.andreykosarygin.common.ui.theme.colorWhite
@@ -69,29 +67,16 @@ fun GreetingPreview() {
 
 @Composable
 fun ScreenSignUp(
-    screenState: ScreenSignUpState?,
     navController: NavController,
     viewModel: ScreenSignUpViewModel
 ) {
-    viewModel.loadScreenState(screenState = screenState)
-
     val model by viewModel.model.collectAsState()
 
     model.navigationEvent?.use { route ->
         when (route) {
-            ScreenSignUpViewModel.Model.NavigationSingleLifeEvent.NavigationDestination.ScreenTerms -> {
-                navController.currentBackStackEntry?.savedStateHandle?.set(
-                    SavedStateKeys.KEY_STATE_SCREEN_SIGN_UP, ScreenSignUpState(
-                        model.buttonRegistrationEnabled,
-                        model.phoneNumber,
-                        model.phoneNumberLength,
-                        model.countryFlag,
-                        model.phoneCode,
-                        model.phoneMask
-                    )
-                )
+            ScreenSignUpViewModel.Model.NavigationSingleLifeEvent.NavigationDestination.ScreenTerms ->
                 navController.navigate(Routes.SCREEN_TERMS)
-            }
+
             ScreenSignUpViewModel.Model.NavigationSingleLifeEvent.NavigationDestination.ScreenCompanies ->
                 navController.navigate(Routes.SCREEN_COMPANIES)
         }
