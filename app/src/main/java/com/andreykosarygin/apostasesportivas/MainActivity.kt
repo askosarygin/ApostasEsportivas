@@ -7,13 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.andreykosarygin.common.ui.theme.ApostasEsportivasTheme
 import com.andreykosarygin.signup_ui.screen_signup.ScreenSignUp
+import com.andreykosarygin.signup_ui.screen_signup.ScreenSignUpViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ApostasEsportivasTheme {
-                ScreenSignUp()
+                ScreenSignUp(ScreenSignUpViewModel())
             }
         }
     }

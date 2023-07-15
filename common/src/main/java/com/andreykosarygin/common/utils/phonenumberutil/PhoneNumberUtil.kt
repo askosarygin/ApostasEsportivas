@@ -1,4 +1,4 @@
-package com.andreykosarygin.common
+package com.andreykosarygin.common.utils.phonenumberutil
 
 import android.content.Context
 import android.graphics.drawable.Drawable
