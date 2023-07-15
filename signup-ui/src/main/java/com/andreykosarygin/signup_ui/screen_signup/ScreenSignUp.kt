@@ -1,8 +1,10 @@
 package com.andreykosarygin.signup_ui.screen_signup
 
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,17 +17,27 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -40,6 +52,7 @@ import com.andreykosarygin.common.ui.theme.appNameBackground
 import com.andreykosarygin.common.ui.theme.buttonColorText
 import com.andreykosarygin.common.ui.theme.colorWhite
 import com.andreykosarygin.signup_ui.screen_signup.utils.PhoneNumberVisualTransformation
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @Preview(showBackground = true)
 @Composable
@@ -60,8 +73,6 @@ fun ScreenSignUp(
         contentAlignment = Alignment.Center
     ) {
         HeaderAppName()
-
-
     }
 
     Box(
@@ -69,17 +80,17 @@ fun ScreenSignUp(
         contentAlignment = Alignment.BottomCenter
     ) {
         Text(
+            modifier = Modifier.padding(bottom = 30.dp),
             text = stringResource(id = R.string.notice_about_private_policy),
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center
         )
     }
-
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.TopCenter
     ) {
-        ConstraintLayout {
+        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (
                 welcome,
                 registerToChooseBookmaker,
@@ -95,9 +106,9 @@ fun ScreenSignUp(
                 text = stringResource(id = R.string.welcome),
                 style = MaterialTheme.typography.displaySmall,
                 modifier = Modifier.constrainAs(welcome) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(registerToChooseBookmaker.top)
+                    top.linkTo(anchor = parent.top, margin = 214.dp)
+                    start.linkTo(anchor = parent.start)
+                    end.linkTo(anchor = parent.end)
                 }
             )
 
@@ -106,9 +117,9 @@ fun ScreenSignUp(
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.constrainAs(registerToChooseBookmaker) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(enterPhoneNumber.top)
+                    top.linkTo(anchor = welcome.bottom, margin = 5.dp)
+                    start.linkTo(anchor = parent.start)
+                    end.linkTo(anchor = parent.end)
                 }
             )
 
@@ -116,12 +127,13 @@ fun ScreenSignUp(
                 text = stringResource(id = R.string.enter_number_of_phone),
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.constrainAs(enterPhoneNumber) {
-                    start.linkTo(phoneEntryField.start)
-                    bottom.linkTo(phoneEntryField.top)
+                    start.linkTo(anchor = phoneEntryField.start)
+                    bottom.linkTo(anchor = phoneEntryField.top, margin = 5.dp)
                 }
             )
 
             PhoneEntryField(
+                countryFlag = model.countryFlag,
                 phoneCode = model.phoneCode,
                 phoneNumber = model.phoneNumber,
                 phoneNumberLength = model.phoneNumberLength,
@@ -131,8 +143,9 @@ fun ScreenSignUp(
                     viewModel.phoneNumberChanged(newPhoneNumber = it)
                 },
                 modifier = Modifier.constrainAs(phoneEntryField) {
-                    start.linkTo(registrationButton.start)
-                    end.linkTo(registrationButton.end)
+                    bottom.linkTo(anchor = registrationButton.top, margin = 32.dp)
+                    start.linkTo(anchor = registrationButton.start)
+                    end.linkTo(anchor = registrationButton.end)
                     width = Dimension.fillToConstraints
                 },
                 onCountryCodeSelectorClick = {
@@ -142,7 +155,9 @@ fun ScreenSignUp(
 
             RegistrationButton(
                 modifier = Modifier.constrainAs(registrationButton) {
-                    top.linkTo(phoneEntryField.bottom, margin = 32.dp)
+                    top.linkTo(anchor = welcome.bottom, margin = 198.dp)
+                    start.linkTo(anchor = parent.start)
+                    end.linkTo(anchor = parent.end)
                 },
                 onClick = {
                     //todo
@@ -157,9 +172,9 @@ fun ScreenSignUp(
                 ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.constrainAs(confirm) {
-                    top.linkTo(registrationButton.bottom)
-                    start.linkTo(registrationButton.start)
-                    end.linkTo(registrationButton.end)
+                    top.linkTo(anchor = registrationButton.bottom, margin = 14.dp)
+                    start.linkTo(anchor = parent.start)
+                    end.linkTo(anchor = parent.end)
                 }
             )
 
@@ -169,19 +184,23 @@ fun ScreenSignUp(
                 textAlign = TextAlign.Center,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.constrainAs(termsOfUse) {
-                    top.linkTo(confirm.bottom)
-                    start.linkTo(confirm.start)
-                    end.linkTo(confirm.end)
+                    top.linkTo(anchor = confirm.bottom, margin = 14.dp)
+                    start.linkTo(anchor = parent.start)
+                    end.linkTo(anchor = parent.end)
                 }
             )
+
             if (model.showCodesOfCountriesList) {
                 CountriesCodeList(
-                    modifier = Modifier.constrainAs(countriesCodeList) {
-                        top.linkTo(phoneEntryField.bottom, margin = 5.dp)
-                        start.linkTo(phoneEntryField.start)
-                        end.linkTo(phoneEntryField.end)
-                        width = Dimension.fillToConstraints
-                    },
+                    modifier = Modifier
+                        .constrainAs(countriesCodeList) {
+                            top.linkTo(anchor = phoneEntryField.bottom, margin = 5.dp)
+                            start.linkTo(anchor = phoneEntryField.start)
+                            end.linkTo(anchor = phoneEntryField.end)
+                            bottom.linkTo(anchor = parent.bottom)
+                            width = Dimension.fillToConstraints
+                            height = Dimension.fillToConstraints
+                        },
                     listOfCountries = model.countriesCodeList,
                     onCodeCountryClick = {
                         viewModel.countryCodeSelected(it)
@@ -219,6 +238,7 @@ fun RegistrationButton(
 
 @Composable
 private fun PhoneEntryField(
+    countryFlag: Drawable?,
     phoneCode: String,
     phoneNumber: String,
     phoneNumberLength: Int,
@@ -243,23 +263,73 @@ private fun PhoneEntryField(
                 mask = phoneMask,
                 whatCharInMaskIsPhoneNumber = whatCharInMaskIsPhoneNumber
             ),
+            cursorBrush = SolidColor(Color.Transparent),
+            textStyle = TextStyle(
+                letterSpacing = 0.44.sp,
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                textAlign = TextAlign.Center
+            ),
             decorationBox = { innerTextField ->
-                Row {
-                    Box(
-                        modifier = Modifier.weight(3f),
-                        contentAlignment = Alignment.CenterEnd
-                    ) {
-                        BasicText(
-                            modifier = Modifier
-                                .padding(end = 5.dp)
-                                .clickable(onClick = onCountryCodeSelectorClick),
-                            text = phoneCode,
-                            maxLines = 1
-                        )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    var weightPhoneNumberBox by remember {
+                        mutableFloatStateOf(0.1f)
                     }
 
-                    Box(modifier = Modifier.weight(5f)) {
-                        innerTextField()
+                    if (phoneCode != "Select country code") {
+                        weightPhoneNumberBox = 5f
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .clickable(onClick = onCountryCodeSelectorClick)
+                            .weight(3f)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            if (countryFlag != null) {
+                                Image(
+                                    modifier = Modifier.padding(start = 20.dp),
+                                    painter = rememberDrawablePainter(drawable = countryFlag),
+                                    contentDescription = stringResource(id = R.string.content_description_icon_flag)
+                                )
+                            }
+                            BasicText(
+                                modifier = Modifier.padding(
+                                    top = 1.dp,
+                                    bottom = 1.dp,
+                                    start = 5.dp,
+                                    end = 5.dp
+                                ),
+                                text = phoneCode,
+                                maxLines = 1,
+                                style = TextStyle(
+                                    letterSpacing = 0.44.sp,
+                                    fontSize = 16.sp,
+                                    lineHeight = 24.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                            )
+                        }
+                    }
+
+                    Box(modifier = Modifier.weight(weightPhoneNumberBox)) {
+                        val textSelectionColors by remember {
+                            mutableStateOf(
+                                TextSelectionColors(
+                                    handleColor = Color.Transparent,
+                                    backgroundColor = Color.Transparent
+                                )
+                            )
+                        }
+                        CompositionLocalProvider(LocalTextSelectionColors provides textSelectionColors) {
+                            innerTextField()
+                        }
                     }
                 }
             }
@@ -280,22 +350,47 @@ private fun CountriesCodeList(
                     modifier = Modifier
                         .background(color = colorWhite)
                         .padding(vertical = 5.dp)
-                        .clickable(onClick = { onCodeCountryClick(index) })
+                        .clickable(onClick = { onCodeCountryClick(index) }),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
-                        modifier = Modifier.weight(3f),
+                        modifier = Modifier.weight(1.5f),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Image(
+                            modifier = Modifier.padding(start = 20.dp),
+                            painter = rememberDrawablePainter(drawable = country.flagIcon),
+                            contentDescription = stringResource(id = R.string.content_description_icon_flag)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier.weight(1.5f),
                         contentAlignment = Alignment.CenterEnd
                     ) {
                         BasicText(
                             modifier = Modifier.padding(end = 5.dp),
-                            text = "+${country.code}"
+                            text = "+${country.code}",
+                            style = TextStyle(
+                                letterSpacing = 0.44.sp,
+                                fontSize = 16.sp,
+                                lineHeight = 24.sp,
+                                textAlign = TextAlign.Center
+                            )
                         )
                     }
                     Box(
                         modifier = Modifier.weight(5f),
                         contentAlignment = Alignment.Center
                     ) {
-                        BasicText(text = country.name)
+                        BasicText(
+                            text = country.name,
+                            style = TextStyle(
+                                letterSpacing = 0.44.sp,
+                                fontSize = 16.sp,
+                                lineHeight = 24.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        )
                     }
                 }
             }

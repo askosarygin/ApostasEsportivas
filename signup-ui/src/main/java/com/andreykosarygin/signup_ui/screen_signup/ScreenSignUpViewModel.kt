@@ -1,5 +1,6 @@
 package com.andreykosarygin.signup_ui.screen_signup
 
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.viewModelScope
 import com.andreykosarygin.common.ApostasEsportivasViewModel
 import com.andreykosarygin.common.ApostasEsportivasViewModelSingleLifeEvent
@@ -32,16 +33,21 @@ class ScreenSignUpViewModel(
     fun countryCodeSelected(countryCodeIndex: Int) {
         updatePhoneNumber("")
         val country = model.value.countriesCodeList[countryCodeIndex]
+        country.flagIcon?.let {
+            updateCountryFlag(it)
+        }
         updatePhoneCode("+${country.code}")
         updatePhoneMask(country.mask)
         updatePhoneNumberLength(country.phoneNumberLength)
+        updateShowCodesOfCountriesList(false)
     }
 
     data class Model(
         val showCodesOfCountriesList: Boolean = false,
         val phoneNumber: String = "",
         val phoneNumberLength: Int = 0,
-        val phoneCode: String = "Country code",
+        val countryFlag: Drawable? = null,
+        val phoneCode: String = "Select country code",
         val phoneMask: String = "",
         val countriesCodeList: List<CountryCodeInfo> = listOf(),
         val whatCharInMaskIsPhoneNumber: Char = '0',
@@ -55,6 +61,14 @@ class ScreenSignUpViewModel(
             enum class NavigationDestination {
 
             }
+        }
+    }
+
+    private fun updateCountryFlag(countryFlag: Drawable) {
+        update {
+            it.copy(
+                countryFlag = countryFlag
+            )
         }
     }
 

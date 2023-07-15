@@ -8,9 +8,10 @@
     <string name="registration">REGISTRATION</string>
     <string name="confirm">By clicking on the “Register” button, you confirm that you\nare over 18 years old, have read and accept.</string>
     <string name="terms_of_use_and_privacy_policy">TERMS OF USE AND PRIVACY POLICY</string>
-    <string name="notice_about_private_policy">SMS confirmation is free. The entrance to the application is confidential, your data will not be shared.</string>
+    <string name="notice_about_private_policy">SMS confirmation is free. The entrance to the\napplication is confidential, your data will not be shared.</string>
 
 
     //Content descriptions
     <string name="content_description_background_app_name">Background app name</string>
+    <string name="content_description_icon_flag">Icon flag</string>
 </resources>
