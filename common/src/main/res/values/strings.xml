@@ -11,9 +11,20 @@
     <string name="terms_of_use_and_privacy_policy">TERMS OF USE AND PRIVACY POLICY</string>
     <string name="notice_about_private_policy">SMS confirmation is free. The entrance to the\napplication is confidential, your data will not be shared.</string>
 
+    //Screen Companies
+    <string name="rates_now">APOSTAS AGORA</string>
+    <string name="new_bonus">Novo Bônus</string>
+    <string name="bonus_200">100% Até R$200</string>
+    <string name="bonus_300">100% Até R$300</string>
+    <string name="bonus_500">100% Até R$500</string>
+    <string name="bonus_250_durante">R$250 Em Bônus\nDurante A Copa</string>
+    <string name="bonus_multipliers_20">Multiplicadores\nDe Até 20x</string>
+    <string name="bonus_multipliers_30">Multiplicadores\nDe Até 30x</string>
+
 
     //Content descriptions
     <string name="content_description_background_app_name">Background app name</string>
+    <string name="content_description_background_company">Background company</string>
     <string name="content_description_icon_flag">Icon flag</string>
 
     <string name="terms_of_use_and_privacy_policy_text">Политика в отношении обработки персональных данных

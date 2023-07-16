@@ -1,6 +1,7 @@
 package com.andreykosarygin.signup_ui.screen_signup
 
 import android.graphics.drawable.Drawable
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
@@ -36,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -164,6 +167,9 @@ fun ScreenSignUp(
                 },
                 onCountryCodeSelectorClick = {
                     viewModel.countryCodeSelectionPressed()
+                },
+                onDoneKeyboardAction = {
+                    viewModel.buttonRegistrationPressed()
                 }
             )
 
@@ -175,7 +181,7 @@ fun ScreenSignUp(
                     end.linkTo(anchor = parent.end)
                 },
                 onClick = {
-                    //todo
+                    viewModel.buttonRegistrationPressed()
                 }
             )
 
@@ -228,6 +234,9 @@ fun ScreenSignUp(
             }
         }
     }
+    BackHandler {
+
+    }
 }
 
 @Composable
@@ -274,13 +283,19 @@ private fun PhoneEntryField(
     whatCharInMaskIsPhoneNumber: Char,
     onPhoneChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onCountryCodeSelectorClick: () -> Unit
+    onCountryCodeSelectorClick: () -> Unit,
+    onDoneKeyboardAction: () -> Unit = {}
 ) {
     Box(modifier = modifier) {
+        val focusManager = LocalFocusManager.current
         BasicTextField(
             value = phoneNumber,
             onValueChange = onPhoneChange,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            keyboardActions = KeyboardActions(onDone = {
+                focusManager.clearFocus()
+                onDoneKeyboardAction()
+            }),
             singleLine = true,
             modifier = Modifier
                 .background(color = colorWhite, shape = RoundedCornerShape(size = 3.dp))

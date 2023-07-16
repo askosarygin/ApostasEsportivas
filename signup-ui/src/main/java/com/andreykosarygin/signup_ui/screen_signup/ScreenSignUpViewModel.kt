@@ -20,6 +20,14 @@ class ScreenSignUpViewModel(
         }
     }
 
+    fun buttonRegistrationPressed() {
+        updateNavigationEvent(
+            Model.NavigationSingleLifeEvent(
+                Model.NavigationSingleLifeEvent.NavigationDestination.ScreenCompanies
+            )
+        )
+    }
+
     fun termsOfUseAndPrivacyPolicyClicked() {
         updateNavigationEvent(
             Model.NavigationSingleLifeEvent(
